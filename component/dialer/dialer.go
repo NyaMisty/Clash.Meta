@@ -10,6 +10,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"math/rand"
 
 	"github.com/metacubex/mihomo/component/keepalive"
 	"github.com/metacubex/mihomo/component/resolver"
@@ -321,7 +322,9 @@ func serialDialContext(ctx context.Context, network string, ips []netip.Addr, po
 		return nil, ErrorNoIpAddress
 	}
 	var errs []error
-	for _, ip := range ips {
+
+	for _, ip_i := range rand.Perm(len(ips)) {
+		ip := ips[ip_i]
 		if conn, err := dialContext(ctx, network, ip, port, opt); err == nil {
 			return conn, nil
 		} else {
